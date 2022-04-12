@@ -4,13 +4,14 @@
 #  next best move from this new location. I keep doing this threading operation until the next thread I might make makes an
 #  improvement to the image that is below a certain threshold
 
-import cv2
+import cv2, time
 from math import cos, sin, pi
 from random import choice
 import numpy as np
 from utils import best_pin
 from tqdm import tqdm
    
+starttime = time.time()
 # path
 path = 'nbs.png'
 # Window name in which image is displayed
@@ -18,15 +19,16 @@ window_name = 'canvas'
    
 image = cv2.imread(path)
 #if image.shape[1] != image.shape[0]:
-image = cv2.resize(image, (500,500))
+image = cv2.resize(image, (900,900))
 grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
 grayImage = 255 - grayImage # invert colours so that black is 255
 
 # Center coordinates
 center_coordinates = (image.shape[0]//2, image.shape[1]//2)
  
 # Radius of circle
-radius = min(center_coordinates) - 5
+radius = min(center_coordinates) - 2
   
 # Blue color in BGR
 color = (0, 0, 255)
@@ -38,19 +40,20 @@ thickness = 1
 canvas = np.ones((image.shape[0], image.shape[1]))*255
 
 # draw dots on the circle of the canvas, materializing the pins for the thread
-nb_pins = 1_000
+nb_pins = 750
 pins = []
 for k in range(nb_pins): # create the pins
     dot_center_y = int(center_coordinates[1] + radius * sin(2*pi*k/nb_pins))
     dot_center_x = int(center_coordinates[0] + radius * cos(2*pi*k/nb_pins))
-    canvas = cv2.circle(canvas, (dot_center_y, dot_center_x) , 4, color, thickness=-1)
+    canvas = cv2.circle(canvas, (dot_center_y, dot_center_x) , 3, color, thickness=-1)
     pins.append((dot_center_x, dot_center_y))
 
 current_pin = choice(pins) # start with a random pin
-position = grayImage # define the current canvas position
+position = grayImage
+
 nb_iter = 1_000
 contrast_last = 255
-contrast_threshold = 30
+contrast_threshold = 45
 nb_strings = 0
 while contrast_last > contrast_threshold:
 #for _ in tqdm(range(nb_iter)):
@@ -58,14 +61,15 @@ while contrast_last > contrast_threshold:
     contrast_last = 0
     for pixel in destination_bresenham:
         contrast_last += position[pixel]
-        position[pixel] //= 2 # Update position (meaning, halve all the pixel values of the pixels that the line just passed through on the grayscale image)
+        position[pixel] //= 3 # Update position (meaning, reduce all the pixel values of the pixels that the line just passed through on the grayscale image)
         canvas[pixel] = 0 # Draw black line on the canvas
         
     contrast_last /= len(destination_bresenham) # contrast_last is the average contrast of the line on the grayscale image
     current_pin = destination_pin
     nb_strings += 1
  
-print(f'{nb_strings} strings were used')
+print(f'{nb_strings} strings were used; run time: {round(time.time()-starttime,2)}')
 # Displaying the canvas with the thread on it
+#cv2.imshow(window_name, 255 - position)
 cv2.imshow(window_name, canvas)
 cv2.waitKey(100000)

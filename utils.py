@@ -29,7 +29,7 @@ def bresenham(x0, y0, x1, y1) -> list:
 
 def best_pin(position: np.array, current_pin: tuple, pins: list = []) -> tuple:
     """From a position and a starting pin, computes and returns the highest-scoring destination pin"""
-    destinations = [pin for pin in pins if pin[0] != current_pin[0]]# and abs(pins.index(current_pin) - pins.index(pin)) > 50]
+    destinations = [pin for pin in pins if pin[0] != current_pin[0] and abs(pins.index(current_pin) - pins.index(pin)) > 50]
     scores = []
     bresenhams = []
     for pin in destinations:
