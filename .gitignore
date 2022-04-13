@@ -1,0 +1,35 @@
+# Windows stuff
+*:Zone.Identifier
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+# Jupyter notebooks
+.ipynb_checkpoints
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+# heavy raw data files
+#*.pdf
+# credentials
+.env
+#virtual environment
+venv/
+# notes and ideas
+*notes.txt

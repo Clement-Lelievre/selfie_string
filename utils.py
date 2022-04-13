@@ -2,10 +2,7 @@ import numpy as np
 
 # bresenham's line algorithm
 def bresenham(x0, y0, x1, y1) -> list:
-    """
-    Bresenham's line algorithm
-    https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-    """
+    "Bresenham's line algorithm https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm"
     dx = abs(x1 - x0)
     sx = 1 if x0 < x1 else -1
     dy = abs(y1 - y0)
